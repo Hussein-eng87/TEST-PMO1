@@ -1,10 +1,11 @@
 import React from 'react';
 import { Project } from '../types';
-import { EditIcon } from './Icons';
+import { EditIcon, TrashIcon } from './Icons';
 
 interface ProjectCardProps {
   project: Project;
   onEdit: () => void;
+  onDelete: () => void;
 }
 
 const calculateDaysLeft = (endDateString: string): number => {
@@ -59,7 +60,7 @@ const DaysLeftIndicator: React.FC<{ days: number }> = ({ days }) => {
   );
 };
 
-const ProjectCard: React.FC<ProjectCardProps> = ({ project, onEdit }) => {
+const ProjectCard: React.FC<ProjectCardProps> = ({ project, onEdit, onDelete }) => {
   const daysLeft = calculateDaysLeft(project.endDate);
 
   const DetailItem: React.FC<{label: string; value: string}> = ({label, value}) => (
@@ -87,6 +88,13 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onEdit }) => {
                     aria-label={`Edit project ${project.projectName}`}
                 >
                     <EditIcon className="h-5 w-5" />
+                </button>
+                <button
+                    onClick={onDelete}
+                    className="p-2 text-slate-500 hover:text-red-600 dark:text-slate-400 dark:hover:text-red-400 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+                    aria-label={`Delete project ${project.projectName}`}
+                >
+                    <TrashIcon className="h-5 w-5" />
                 </button>
             </div>
         </div>

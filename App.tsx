@@ -17,25 +17,19 @@ const App = () => {
     try {
       const storedProjects = localStorage.getItem('projects');
       if (storedProjects) {
-        // As requested by the user, filter projects to only keep "IBCP"
-        const allProjects: Project[] = JSON.parse(storedProjects);
-        const filteredProjects = allProjects.filter(p => p.projectName === 'IBCP');
-        setProjects(filteredProjects);
-        if (filteredProjects.length === 0 && allProjects.length > 0) {
-            // If filtering results in an empty list but there were projects, add default
-             setProjects([
-              // FIX: Corrected invalid month in date string from '00' to '01'.
-              { id: '1', projectName: 'IBCP', contractId: 'C-98765', startDate: '2024-01-01', endDate: '2024-12-31', tfp: 'Project Lead', bocFp: 'Client Manager' },
-            ]);
-        }
+        setProjects(JSON.parse(storedProjects));
       } else {
-         // As requested, set "IBCP" as the only sample project
+        // If no projects are stored, initialize with a sample project
         setProjects([
           { id: '1', projectName: 'IBCP', contractId: 'C-98765', startDate: '2024-01-01', endDate: '2024-12-31', tfp: 'Project Lead', bocFp: 'Client Manager' },
         ]);
       }
     } catch (error) {
       console.error("Failed to load projects from local storage", error);
+       // In case of error, start with a default project to prevent a crash
+       setProjects([
+        { id: '1', projectName: 'IBCP', contractId: 'C-98765', startDate: '2024-01-01', endDate: '2024-12-31', tfp: 'Project Lead', bocFp: 'Client Manager' },
+      ]);
     }
   }, []);
 
@@ -73,6 +67,12 @@ const App = () => {
     handleCloseModal();
   };
 
+  const handleDeleteProject = (projectId: string) => {
+    if (window.confirm('Are you sure you want to delete this project?')) {
+        setProjects(projects.filter(p => p.id !== projectId));
+    }
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 p-4 sm:p-6 lg:p-8">
       <div className="max-w-5xl mx-auto">
@@ -96,6 +96,7 @@ const App = () => {
                 key={project.id}
                 project={project}
                 onEdit={() => handleOpenModal(project)}
+                onDelete={() => handleDeleteProject(project.id)}
               />
             ))}
           </main>
