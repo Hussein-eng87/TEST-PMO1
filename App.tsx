@@ -19,16 +19,18 @@ const App = () => {
       if (storedProjects) {
         setProjects(JSON.parse(storedProjects));
       } else {
-        // If no projects are stored, initialize with a sample project
+        // If no projects are stored, initialize with sample projects
         setProjects([
           { id: '1', projectName: 'IBCP', contractId: 'C-98765', startDate: '2024-01-01', endDate: '2024-12-31', tfp: 'Project Lead', bocFp: 'Client Manager' },
+          { id: '2', projectName: 'TOC', contractId: 'C-12345', startDate: '2024-03-15', endDate: '2025-03-14', tfp: 'Tech Lead', bocFp: 'Business Analyst' },
         ]);
       }
     } catch (error) {
       console.error("Failed to load projects from local storage", error);
-       // In case of error, start with a default project to prevent a crash
+       // In case of error, start with default projects to prevent a crash
        setProjects([
         { id: '1', projectName: 'IBCP', contractId: 'C-98765', startDate: '2024-01-01', endDate: '2024-12-31', tfp: 'Project Lead', bocFp: 'Client Manager' },
+        { id: '2', projectName: 'TOC', contractId: 'C-12345', startDate: '2024-03-15', endDate: '2025-03-14', tfp: 'Tech Lead', bocFp: 'Business Analyst' },
       ]);
     }
   }, []);
