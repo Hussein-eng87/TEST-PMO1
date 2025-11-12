@@ -1,5 +1,5 @@
-
 {
   "name": "Project Management Dashboard",
-  "description": "A simple and elegant application to manage key information for your projects, including timelines, contract details, and other critical data points."
+  "description": "A simple and elegant application to manage key information for your projects, including timelines, contract details, and other critical data points.",
+  "requestFramePermissions": []
 }

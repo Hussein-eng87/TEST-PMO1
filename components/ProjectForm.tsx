@@ -1,45 +1,28 @@
-
 import React, { useState, useEffect } from 'react';
 import { Project } from '../types';
 
 interface ProjectFormProps {
-  onSubmit: (project: Omit<Project, 'id'> & { id?: string }) => void;
+  onSubmit: (project: Omit<Project, 'id'>) => void;
   onCancel: () => void;
   initialData?: Project | null;
 }
 
 const ProjectForm: React.FC<ProjectFormProps> = ({ onSubmit, onCancel, initialData }) => {
-  const [formData, setFormData] = useState({
-    projectName: '',
-    contractId: '',
-    startDate: '',
-    endDate: '',
-    tfp: '',
-    bocFp: ''
+  const getInitialState = () => ({
+    projectName: initialData?.projectName || '',
+    contractId: initialData?.contractId || '',
+    startDate: initialData?.startDate || '',
+    endDate: initialData?.endDate || '',
+    tfp: initialData?.tfp || '',
+    bocFp: initialData?.bocFp || ''
   });
 
+  const [formData, setFormData] = useState(getInitialState());
+
   useEffect(() => {
-    if (initialData) {
-      setFormData({
-        projectName: initialData.projectName,
-        contractId: initialData.contractId,
-        startDate: initialData.startDate,
-        endDate: initialData.endDate,
-        tfp: initialData.tfp,
-        bocFp: initialData.bocFp,
-      });
-    } else {
-      // Reset form for new entry
-      setFormData({
-        projectName: '',
-        contractId: '',
-        startDate: '',
-        endDate: '',
-        tfp: '',
-        bocFp: ''
-      });
-    }
+    setFormData(getInitialState());
   }, [initialData]);
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -48,12 +31,10 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ onSubmit, onCancel, initialDa
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (initialData) {
-      onSubmit({ ...formData, id: initialData.id });
-    } else {
-      onSubmit(formData);
-    }
+    onSubmit(formData);
   };
+
+  const isEditing = !!initialData;
 
   const InputField: React.FC<{ name: keyof typeof formData; label: string; type?: string; required?: boolean }> = ({ name, label, type = 'text', required = false }) => (
     <div>
@@ -74,7 +55,9 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ onSubmit, onCancel, initialDa
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-        <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{initialData ? 'Edit Project' : 'Add New Project'}</h2>
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
+          {isEditing ? 'Edit Project' : 'Add New Project'}
+        </h2>
         <InputField name="projectName" label="Project Name" required />
         <InputField name="contractId" label="Contract / SO ID" required />
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -96,7 +79,7 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ onSubmit, onCancel, initialDa
                 type="submit"
                 className="px-4 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-75 transition"
             >
-                {initialData ? 'Save Changes' : 'Create Project'}
+                {isEditing ? 'Save Changes' : 'Create Project'}
             </button>
         </div>
     </form>

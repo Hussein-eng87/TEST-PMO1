@@ -1,11 +1,10 @@
 import React from 'react';
 import { Project } from '../types';
-import { EditIcon, TrashIcon } from './Icons';
+import { EditIcon } from './Icons';
 
 interface ProjectCardProps {
   project: Project;
-  onEdit: (project: Project) => void;
-  onDelete: (id: string) => void;
+  onEdit: () => void;
 }
 
 const calculateDaysLeft = (endDateString: string): number => {
@@ -60,7 +59,7 @@ const DaysLeftIndicator: React.FC<{ days: number }> = ({ days }) => {
   );
 };
 
-const ProjectCard: React.FC<ProjectCardProps> = ({ project, onEdit, onDelete }) => {
+const ProjectCard: React.FC<ProjectCardProps> = ({ project, onEdit }) => {
   const daysLeft = calculateDaysLeft(project.endDate);
 
   const DetailItem: React.FC<{label: string; value: string}> = ({label, value}) => (
@@ -82,14 +81,13 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onEdit, onDelete }) 
             {/* Status & Actions */}
             <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
                 <DaysLeftIndicator days={daysLeft} />
-                <div className="flex">
-                    <button onClick={() => onEdit(project)} aria-label={`Edit project ${project.projectName}`} className="p-2 text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        <EditIcon />
-                    </button>
-                    <button onClick={() => onDelete(project.id)} aria-label={`Delete project ${project.projectName}`} className="p-2 text-slate-500 hover:text-red-600 dark:hover:text-red-400 transition-colors rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-red-500">
-                        <TrashIcon />
-                    </button>
-                </div>
+                <button
+                    onClick={onEdit}
+                    className="p-2 text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    aria-label={`Edit project ${project.projectName}`}
+                >
+                    <EditIcon className="h-5 w-5" />
+                </button>
             </div>
         </div>
 
